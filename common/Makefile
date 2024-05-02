@@ -3,7 +3,7 @@
 #
 # Sarah Levesque Spring 2024 CS50
 
-OBJS = pagedir.o
+OBJS = pagedir.o index.o word.o
 INCLUDES = -I../libcs50
 LIB = common.a
 
@@ -16,6 +16,8 @@ $(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
 pagedir.o = pagedir.h
+index.o = index.h
+word.o = word.h
 
 # clean up after our compilation
 clean:

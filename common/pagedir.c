@@ -39,7 +39,7 @@ bool pagedir_init(const char* pageDirectory){
         return false; // failed to allocate memory
     }
     char* crawlMark = ".crawler"; // create ending of file name for use
-
+    
     sprintf(pathname, "%s/%s", pageDirectory, crawlMark);
     
     // open the file for writing
