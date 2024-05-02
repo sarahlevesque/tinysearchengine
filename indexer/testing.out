@@ -1,0 +1,55 @@
+ml () {  module ml "$@"
+}
+module () {  _module_raw "$@" 2>&1
+}
+_module_raw () {  eval `/usr/bin/tclsh8.6 /usr/lib/x86_64-linux-gnu/modulecmd.tcl bash "$@"`;
+ _mlstatus=$?;
+ return $_mlstatus
+}
+#!/bin/bash
+
+# zero arguments
+./indexer/indexer
+Usage: provide a valid pageDirectory and indexFilename
+
+
+# invalid arguments
+./indexer/indexer NULL indexer/test
+Usage: failed to initialize and find directory NULL
+
+
+./indexer/indexer crawler/letters-0 NULL
+Usage: failed to open file NULL
+
+
+# too many arguments
+./indexer/indexer crawler/letters-0 indexer/test SARAH CS50
+Usage: provide a valid pageDirectory and indexFilename
+
+
+# not a crawled directory
+./indexer/indexer crawler/notCrawled indexer/test
+Usage: please provide a crawled directory, crawler/notCrawled is not yet crawled
+
+
+# invalid indexFile (does not exist)
+./indexer/indexer crawler/letters-3 indexer/CS50
+Usage: failed to open file indexer/CS50
+
+
+# comparing indexer output with cs50-dev output, should print nothing
+./indexer/indexcmp indexer/toscrape-1 /thayerfs/home/f006fz1/cs50-dev/shared/tse/indices/toscrape-1.ndx
+
+
+# indexing wikipedia_2 from cs50-dev
+./indexer/indexer crawler/wikipedia-2 indexer/wikipedia-2
+
+
+# comparing indexer's output with cs50dev indices
+./indexer/indexcmp indexer/wikipedia-2 /thayerfs/home/f006fz1/cs50-dev/shared/tse/indices/wikipedia_2.ndx
+
+
+# running a test comparison with indexertest
+./indexer/indexer crawler/letters-3 indexer/test
+./indexer/indexertest indexer/test indexer/testcomp
+./indexer/indexcmp indexer/test indexer/testcomp # nothing should be printed following this
