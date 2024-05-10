@@ -25,6 +25,16 @@
 */
 webpage_t* indexLoad(FILE* file);
 
+/**************** loadNewIndexTable() ****************/
+/* load the index from the oldIndexFilename into an inverted-index data structure.
+*
+* Caller Provides:
+*    a valid indexed file
+* We guarantee:
+*    if the file is valid and has been indexed, we build and return an index data structure for it
+*/
+hashtable_t* loadNewIndexTable(char* oldIndexFile);
+
 /**************** invertedIndexFile() ****************/
 /* Given a constructed hashtable (inverted index), construct an output indexed file
 *

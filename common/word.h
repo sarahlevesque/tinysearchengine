@@ -23,3 +23,13 @@
 *    it is normalized to lowercase
 */
 char* normalizeWord(char* word);
+
+/**************** tokenize() ****************/
+/* Given a char* query, it is tokenized into an array of strings
+*
+* Caller Provides:
+*    a valid query
+* We guarantee:
+*    each word is normalized to lowercase, and added to the array
+*/
+char** tokenize(char* query, const char* delimeter, size_t lengthOfQuery);

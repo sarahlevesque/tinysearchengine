@@ -28,6 +28,7 @@
 /* that is, visible outside this file */
 webpage_t* indexLoad(FILE* file);
 void invertedIndexFile(FILE* fp, hashtable_t* index);
+hashtable_t* loadNewIndexTable(hashtable_t* index, char* oldIndexFile);
 
 /**************** local functions ****************/
 /* not visible outside this file */
@@ -92,6 +93,54 @@ webpage_t* indexLoad(FILE* file){
         return NULL;
     }
     return loadPage;
+}
+
+/**************** loadNewIndexTable() ****************/
+/* see index.h for more details */
+hashtable_t* loadNewIndexTable(hashtable_t* index, char* oldIndexFile){
+    // try to access provided files, exit if not possible
+    FILE* oldFile = fopen(oldIndexFile, "r");
+    if(oldFile == NULL){
+        fprintf(stderr, "Usage: provide a valid already indexed file\n");
+        exit(1);
+    }
+    index = hashtable_new(200);
+    char* linecontent = malloc(sizeof(char) * FILENAME_MAX);
+
+    while (!feof(oldFile)) {
+        // for every line, build a set of counter pairs
+        if(fgets(linecontent, FILENAME_MAX, oldFile)!= NULL){
+            linecontent[strcspn(linecontent, "\n")] = '\0';
+            // use strtok to parse through the line splitting by space
+            char* word = strtok(linecontent, " ");
+            int wordCount = 1;
+            set_t* wordAndCounters;
+            counters_t* ctrs = counters_new();
+            char* firstWord;
+
+            if(word != NULL && wordCount == 1){
+                wordAndCounters = set_new();
+                firstWord = word;
+                wordCount++;
+            }
+
+            while((word = strtok(NULL, " ")) != NULL){
+                // start parsing docID and counts
+                int docid = atoi(word);
+                word = strtok(NULL, " "); // keep getting words
+                int count = atoi(word);
+                counters_add(ctrs, docid);
+                counters_set(ctrs, docid, count);
+            }
+
+            set_insert(wordAndCounters, firstWord, ctrs);
+            hashtable_insert(index, firstWord, wordAndCounters);
+        } else {
+            mem_free(linecontent);
+        }
+    }
+    fclose(oldFile);
+    return index;
 }
 
 /**************** invertedIndexFile() ****************/
