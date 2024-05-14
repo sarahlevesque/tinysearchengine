@@ -28,7 +28,7 @@
 /* that is, visible outside this file */
 webpage_t* indexLoad(FILE* file);
 void invertedIndexFile(FILE* fp, hashtable_t* index);
-hashtable_t* loadNewIndexTable(hashtable_t* index, char* oldIndexFile);
+void loadNewIndexTable(hashtable_t** index, char* oldIndexFile);
 
 /**************** local functions ****************/
 /* not visible outside this file */
@@ -97,14 +97,14 @@ webpage_t* indexLoad(FILE* file){
 
 /**************** loadNewIndexTable() ****************/
 /* see index.h for more details */
-hashtable_t* loadNewIndexTable(hashtable_t* index, char* oldIndexFile){
+void loadNewIndexTable(hashtable_t** index, char* oldIndexFile){
     // try to access provided files, exit if not possible
     FILE* oldFile = fopen(oldIndexFile, "r");
     if(oldFile == NULL){
         fprintf(stderr, "Usage: provide a valid already indexed file\n");
         exit(1);
     }
-    index = hashtable_new(200);
+    *index = hashtable_new(200);
     char* linecontent = malloc(sizeof(char) * FILENAME_MAX);
 
     while (!feof(oldFile)) {
@@ -134,13 +134,12 @@ hashtable_t* loadNewIndexTable(hashtable_t* index, char* oldIndexFile){
             }
 
             set_insert(wordAndCounters, firstWord, ctrs);
-            hashtable_insert(index, firstWord, wordAndCounters);
+            hashtable_insert(*index, firstWord, wordAndCounters);
         } else {
             mem_free(linecontent);
         }
     }
     fclose(oldFile);
-    return index;
 }
 
 /**************** invertedIndexFile() ****************/

@@ -33,7 +33,7 @@ webpage_t* indexLoad(FILE* file);
 * We guarantee:
 *    if the file is valid and has been indexed, we build and return an index data structure for it
 */
-hashtable_t* loadNewIndexTable(char* oldIndexFile);
+void loadNewIndexTable(hashtable_t** index, char* oldIndexFile);
 
 /**************** invertedIndexFile() ****************/
 /* Given a constructed hashtable (inverted index), construct an output indexed file

@@ -32,4 +32,4 @@ char* normalizeWord(char* word);
 * We guarantee:
 *    each word is normalized to lowercase, and added to the array
 */
-char** tokenize(char* query, const char* delimeter, size_t lengthOfQuery);
+char** tokenize(char* query, const char* delimiter, size_t lengthOfQuery);
